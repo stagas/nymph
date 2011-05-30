@@ -93,6 +93,7 @@ sandbox.length = thisStore.length
 sandbox.forEach = thisStore.forEach
 sandbox.clear = thisStore.clear
 sandbox.func = thisStore.func
+sandbox.nick = args.nick
 sandbox.load = function(name) {
   return ProxyStore(name)
 }

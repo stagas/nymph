@@ -63,7 +63,7 @@ module.exports = function Bot(config) {
       this.channel
         ? this.channel
         : nick || this.nick
-    , msg.substr(0, 250)
+    , msg.substr(0, 300)
     )
     return true
   }
@@ -100,7 +100,7 @@ module.exports = function Bot(config) {
 
   bot.on('message', function(nick, to, text) {
     console.log(nick, to, text, text.substr(0, config.nick.length))
-    if (~config.channels.indexOf(to)) {
+    if (~config.channels.indexOf(to.toLowerCase())) {
       if (text.substr(0, config.nick.length) == config.nick) {
         bot.emit.call(
           bot.Reply(nick, to)

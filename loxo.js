@@ -70,8 +70,8 @@ bot.on('tome', function(input) {
       }
       var func = this.custom.get(cmd)
       return func
-        ? sandbox(func, { name: cmd, args: args, dirname: __dirname }, replySandbox)
-        : sandbox(msg, { name: nick, args: args, dirname: __dirname }, replySandbox)
+        ? sandbox(func, { name: cmd, nick: nick, args: args, dirname: __dirname }, replySandbox)
+        : sandbox(msg, { name: nick, nick: nick, args: args, dirname: __dirname }, replySandbox)
       break
   }
 })

@@ -26,12 +26,21 @@ module.exports = function Base(base) {
       get: function(key) {
         if (null == key) return
         if (data.propertyIsEnumerable(key)) {
-          return data[key]
+          var result
+          try {
+            result = JSON.parse(data[key])
+          } catch(e) {
+            result = data[key]
+          }
+          return result
         }
       }
     , set: function(key, val) {
         if (null == key || null == val) return
-        data[key] = val && val.toString() || ''
+        data[key] =
+          'object' === typeof val
+            ? JSON.stringify(val)
+            : val && val.toString() || ''
         try {
           fs.writeFileSync(datafile, JSON.stringify(data, null, '  '), 'utf8')
           return true
@@ -64,8 +73,14 @@ module.exports = function Base(base) {
         return Object.keys(data).length
       }
     , forEach: function(fn) {
+        var result
         Object.keys(data).sort().forEach(function(key) {
-          fn.call(data[key], key, data[key].toString())
+          try {
+            result = JSON.parse(data[key])
+          } catch(e) {
+            result = data[key]
+          }
+          fn.call(result, key, result)
         })
       }
     }
