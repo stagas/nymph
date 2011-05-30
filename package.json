@@ -1,0 +1,10 @@
+{ "name"         : "nymph"
+, "description"  : "Nymph is a node.js IRC bot module"
+, "version"      : "0.0.1"
+, "author"       : "George Stagas <gstagas@gmail.com>"
+, "engines"      : { "node": ">=0.4.0" }
+, "dependencies" : { "irc": ">=0.2.0", "sandbox": ">=0.8.1" }
+, "main"         : "./nymph"
+, "repository"   : { "type": "git", "url": "https://github.com/stagas/nymph" }
+, "bugs"         : { "web": "https://github.com/stagas/nymph/issues" }
+}
