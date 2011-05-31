@@ -16,6 +16,7 @@ var fs = require('fs')
     })
   , Sandbox = new(require('sandbox'))({ shovel: __dirname + '/shovel.js' })
   , sandbox = Sandbox.run.bind(Sandbox)
+  , manual = {}
 
 bot.on('tome', function(input) {
   var self = this
@@ -23,6 +24,18 @@ bot.on('tome', function(input) {
     , msg = input.msg
     , cmd = input.cmd
     , args = input.args
+
+  if (cmd === '@' || cmd[0] === '@') {
+    if (cmd === '@') {
+      nick = this.nick = args[0]
+      cmd = args[1]
+      args = args.slice(2)
+    } else {
+      nick = this.nick = cmd.slice(1)
+      cmd = args[0]
+      args = args.slice(1)
+    }
+  }
 
   switch (cmd) {
     case 'hi':
@@ -57,6 +70,10 @@ bot.on('tome', function(input) {
         ? this.reply(source)
         : this.reply('no source available for "' + cmd + '"')
       break
+    case 'man':
+    case 'manual':
+      return this.reply(getManual(args[0]) || 'nothing found :(')
+      break
     case 'quit':
       return this.client.disconnect('bye')
       break
@@ -75,6 +92,31 @@ bot.on('tome', function(input) {
       break
   }
 })
+
+// manual
+;(function readManual() {
+  var manualTxt = require('fs').readFileSync(__dirname + '/nodejsmanual.txt', 'utf8').split('\r\n\r\n')
+  for (var i = 0, line, len = manualTxt.length; i < len; i++) {
+    line = manualTxt[i].replace(/\r\n/gm, ' ')
+    if (line.substr(0, 3) === '###')
+      manual[line.split(' ').slice(1).join(' ')] = manualTxt[i + 1].replace(/\r\n/gm, ' ').split('Example:').join('')
+  }
+}())
+
+function getManual(s) {
+  s = s.toLowerCase()
+  for (var k in manual) {
+    if (~k.toLowerCase().indexOf(s) && k[s.length] === '(') {
+      return k + ' - ' + manual[k]
+    }
+  }
+  for (var k in manual) {
+    if (~k.toLowerCase().indexOf(s)) {
+      return k + ' - ' + manual[k]
+    }
+  }  
+  return false
+}
 
 // utils
 function safe(s) {
